@@ -5,12 +5,15 @@
     <script src="http://js.leapmotion.com/leap-0.6.4.js"></script>
     <script src="http://js.leapmotion.com/leap-plugins-0.1.11.js"></script>
     <script src="http://js.leapmotion.com/leap.rigged-hand-0.1.4.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.1/css/font-awesome.min.css" />
     <!--&lt;!&ndash; override the bundled playback plugin: &ndash;&gt;-->
     <!--<script src="js/leap.playback-0.2.1.min.js"></script>-->
 </head>
 
 <h1>{{title}}</h1>
 <p>Welcome to {{title}}</p>
+<div id="message_container"></div>
+
 <div class="card">
     <div class="card-header">
         Featured
@@ -20,7 +23,7 @@
         <p class="card-text">Currently showing: <span id="currentWord"></span></p>
 
 
-    <br>
+        <br>
         <div style="padding: 10px 10px 10px 10px;">
             <label for="exampleInputEmail1">Type a word</label>
             <div class="row">
@@ -29,10 +32,13 @@
                 <!--<small id="keywordHelp" class="form-text text-muted">Enter Words To Display Here, and they will be-->
                 <!--turned into sign language-->
                 <!--</small>-->
-                <div class="col-md-1"></div>
+                <div class="col-md-1">
+                    <button onclick="startConverting();" id="micButton" class="btn btn-primary"><i class="fa fa-microphone"></i></button>
+                </div>
+                <div id="result"></div>
+
                 <button onclick="submitClick()" class="btn btn-primary col-md-2">Submit</button>
             </div>
-
         </div>
 
     </div>
@@ -43,55 +49,42 @@
 
         var recordingName = "alex";
         var strArr = [];
+        var hasValid = false;
 
         function submitClick() {
             var str = document.getElementById('keywords').value;
             var res = str.split(" ");
             strArr = res;
+            var pos = 0;
+
             for (var i = 0; i < res.length; i++) {
                 recordingName = res[i].replace(/\W/g, '');
-                var pos = i;
-
-
                 if (UrlExists('/json/' + recordingName + '.json.lz')) {
-
-                    if (document.getElementsByTagName("canvas").length > 0)
-                        for (var i = 0; i < document.getElementsByTagName("canvas").length; i++)
-                            document.getElementsByTagName("canvas")[i].remove();
-
-                    document.getElementById('currentWord').innerText = res[i];
-
-                    var controller = new Leap.Controller();
-                    controller
-                            .use('playback', {
-                                recording: '/json/' + recordingName + '.json.lz',
-                                requiredProtocolVersion: 6,
-                                pauseOnHand: true,
-                                loop: false,
-                                overlay: false,
-                            }).use('riggedHand').connect();
-                    window.controller = controller;
-
-                    return window.controller.on('playback.playbackFinished', function (player) {
-                        console.log("Playback DOne!");
-                        pos++;
-                        document.getElementsByTagName("canvas")[0].remove();
-                        playVideo(pos, res.length);
-                    });
+                    hasValid = true;
+                    break;
                 }
-                else {
-                    pos++;
-                    if (document.getElementsByTagName("canvas").length > 0)
-                        for (var i = 0; i < document.getElementsByTagName("canvas").length; i++)
-                            document.getElementsByTagName("canvas")[i].remove();
-
-                    document.getElementById('currentWord').innerText = "";
-
-                    playVideo(pos, res.length);
-                }
-
-
             }
+
+            if (!hasValid){
+                showAlert("Error:", "No valid words entered!", false);
+                return;
+            }
+
+            if (UrlExists('/json/' + recordingName + '.json.lz')) {
+                playVideo(pos, res.length);
+            }
+            else {
+                pos++;
+                if (document.getElementsByTagName("canvas").length > 0)
+                    for (var i = 0; i < document.getElementsByTagName("canvas").length; i++)
+                        document.getElementsByTagName("canvas")[i].remove();
+
+                document.getElementById('currentWord').innerText = "";
+
+                playVideo(pos, res.length);
+            }
+
+
         }
 
         function playVideo(pos, max) {
@@ -148,6 +141,64 @@
             return http.status != 404;
         }
 
+        function showAlert(header, message, success){
+            html = "";
+            if (!success){
+                html += '<div class="alert alert-danger alert-dismissible fade show" role="alert">';
+            }
+            else
+                html += '<div class="alert alert-success alert-dismissible fade show" role="alert">';
+
+            html += '  <button type="button" class="close" data-dismiss="alert" aria-label="Close">\n' +
+                    '    <span aria-hidden="true">&times;</span>\n' +
+                    '  </button>';
+            html += '<h4 class="alert-heading">'+header+'</h4>';
+            html += '<p>'+message+'</p>';
+            html += '</div>'
+            $('#message_container').append(html);
+        }
+
+
+        var r = document.getElementById('keywords');
+
+        function startConverting () {
+            if('webkitSpeechRecognition' in window){
+                var speechRecognizer = new webkitSpeechRecognition();
+                speechRecognizer.continuous = true;
+                speechRecognizer.interimResults = true;
+                speechRecognizer.lang = 'en-IN';
+                speechRecognizer.start();
+
+                var finalTranscripts = '';
+
+                speechRecognizer.onresult = function(event){
+                    var interimTranscripts = '';
+                    for(var i = event.resultIndex; i < event.results.length; i++){
+                        var transcript = event.results[i][0].transcript;
+                        transcript.replace("\n", "<br>");
+                        if(event.results[i].isFinal){
+                            finalTranscripts += transcript;
+                        }else{
+                            interimTranscripts += transcript;
+                        }
+                    }
+                    r.value = finalTranscripts + interimTranscripts;
+                    if (interimTranscripts.length > 0){
+                        document.getElementById('micButton').className = 'btn btn-warning';
+                    }
+                    else
+                    {
+                        document.getElementById('micButton').className = 'btn btn-success';
+                        submitClick();
+                    }
+
+                };
+                speechRecognizer.onerror = function (event) {
+                };
+            }else{
+                r.value = 'Your browser is not supported. If google chrome, please upgrade!';
+            }
+        }
     </script>
 </div>
 </div>
