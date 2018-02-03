@@ -1,0 +1,13 @@
+<head>
+    <script src="/js/build-index.js"></script>
+</head>
+<h1>{{title}}</h1>
+<p>Welcome to {{title}}</p>
+<script>
+    var controller = new Leap.Controller({enableGestures: true})
+            .use('screenPosition')
+            .connect()
+            .on('frame', function(frame){
+                // Try making some circles
+            })
+</script>
