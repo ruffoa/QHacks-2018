@@ -48,30 +48,16 @@
                     pos = i;
 
                     var controller = new Leap.Controller();
+                    if ()
                     controller
                             .use('playback', {
                                 recording: '/json/' + recordingName + '.json.lz',
                                 requiredProtocolVersion: 6,
                                 pauseOnHand: true,
                                 loop: false,
+                                overlay: false,
                             }).use('riggedHand').connect();
                     window.controller = controller;
-
-                    // return window.controller.on('playback.recordingSet', function(player) {
-                    //     var metadata = player.metadata;
-                    // });
-
-                    // return window.controller.on('playback.recordingFinished', function(player) {
-                    //     isDone = true;
-                    //     console.log ("DOne!");
-                    //
-                    // });
-
-                    // while(!isDone)
-                    // {
-                    //     // console.log("Waiting..");
-                    //     // window.setTimeout(isDone, 100); /* this checks the flag every 100 milliseconds*/
-                    // }
 
                     return window.controller.on('playback.playbackFinished', function (player) {
                         console.log("Playback DOne!");
@@ -99,6 +85,7 @@
                             requiredProtocolVersion: 6,
                             pauseOnHand: true,
                             loop: false,
+                            overlay: false,
                         }).use('riggedHand').connect();
 
 
@@ -113,22 +100,14 @@
 
             }
 
+            function UrlExists(url)
+            {
+                var http = new XMLHttpRequest();
+                http.open('HEAD', url, false);
+                http.send();
+                return http.status!=404;
+            }
 
-            <!--var leap = Leap.loop({})-->
-            <!--.use('playback', {-->
-            <!--recording: '/json/' + recordingName + '.json.lz',-->
-            <!--requiredProtocolVersion: 6,-->
-            <!--pauseOnHand: true,-->
-            <!--loop: true-->
-            <!--}).on('mode' == 'playback', function () {-->
-            <!--if (pos < strArr.length) {-->
-            <!--recordingName = strArr[pos];-->
-            <!--}-->
-
-            <!--}).use('riggedHand');-->
-            <!--window.controller = Leap.loopController;-->
-            <!--}-->
-            <!--});-->
         </script>
     </div>
 </div>
