@@ -21,61 +21,114 @@
         <a href="#" class="btn btn-primary">Go somewhere</a>
     </div>
 
-    <input>
-    <!--<script>-->
-        <!--var cats = {};-->
+    <div class="row">
+        <label for="exampleInputEmail1">Type a word</label>
+        <input type="text" class="form-control" id="keywords" aria-describedby="keywordHelp"
+               placeholder="Enter Words To Display Here">
+        <small id="keywordHelp" class="form-text text-muted">Enter Words To Display Here, and they will be
+            turned into sign language
+        </small>
+        <button onclick="submitClick()" class="btn btn-primary">Submit</button>
 
-        <!--Leap.loop(function(frame) {-->
+        <div id="connect-leap" class="col-md-8"></div>
+        <script>
 
-            <!--frame.hands.forEach(function(hand, index) {-->
+            var recordingName = "alex";
+            var strArr = [];
+            var timeVid = 0;
+            var isDone = false;
 
-                <!--var cat = ( cats[index] || (cats[index] = new Cat()) );-->
-                <!--cat.setTransform(hand.screenPosition(), hand.roll());-->
+            function submitClick() {
+                var str = document.getElementById('keywords').value;
+                var res = str.split(" ");
+                strArr = res;
+                for (var i = 0; i < res.length; i++) {
+                    recordingName = res[i];
+                    isDone = false;
+                    pos = i;
 
-            <!--});-->
+                    var controller = new Leap.Controller();
+                    controller
+                            .use('playback', {
+                                recording: '/json/' + recordingName + '.json.lz',
+                                requiredProtocolVersion: 6,
+                                pauseOnHand: true,
+                                loop: false,
+                            }).use('riggedHand').connect();
+                    window.controller = controller;
 
-        <!--}).use('screenPosition', {scale: 0.25});-->
+                    // return window.controller.on('playback.recordingSet', function(player) {
+                    //     var metadata = player.metadata;
+                    // });
+
+                    // return window.controller.on('playback.recordingFinished', function(player) {
+                    //     isDone = true;
+                    //     console.log ("DOne!");
+                    //
+                    // });
+
+                    // while(!isDone)
+                    // {
+                    //     // console.log("Waiting..");
+                    //     // window.setTimeout(isDone, 100); /* this checks the flag every 100 milliseconds*/
+                    // }
+
+                    return window.controller.on('playback.playbackFinished', function (player) {
+                        console.log("Playback DOne!");
+                        pos++;
+                        document.getElementsByTagName("canvas")[0].remove();
+                        playVideo(pos, res.length);
+                    });
 
 
-        <!--var Cat = function() {-->
-            <!--var cat = this;-->
-            <!--var img = document.createElement('img');-->
-            <!--img.src = 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/109794/cat_2.png';-->
-            <!--img.style.position = 'absolute';-->
-            <!--img.onload = function () {-->
-                <!--cat.setTransform([window.innerWidth/2,window.innerHeight/2], 0);-->
-                <!--document.body.appendChild(img);-->
+                }
+            }
+
+            function playVideo(pos, max) {
+                console.log("Play video called!");
+
+                if (pos >= max)
+                    return;
+
+                recordingName = strArr[pos];
+
+                var controller = new Leap.Controller();
+                controller
+                        .use('playback', {
+                            recording: '/json/' + recordingName + '.json.lz',
+                            requiredProtocolVersion: 6,
+                            pauseOnHand: true,
+                            loop: false,
+                        }).use('riggedHand').connect();
+
+
+                window.controller = controller;
+
+                return window.controller.on('playback.playbackFinished', function (player) {
+                    console.log("Playback DOne!");
+                    pos++;
+                    document.getElementsByTagName("canvas")[0].remove();
+                    playVideo(pos, max);
+                });
+
+            }
+
+
+            <!--var leap = Leap.loop({})-->
+            <!--.use('playback', {-->
+            <!--recording: '/json/' + recordingName + '.json.lz',-->
+            <!--requiredProtocolVersion: 6,-->
+            <!--pauseOnHand: true,-->
+            <!--loop: true-->
+            <!--}).on('mode' == 'playback', function () {-->
+            <!--if (pos < strArr.length) {-->
+            <!--recordingName = strArr[pos];-->
             <!--}-->
 
-            <!--cat.setTransform = function(position, rotation) {-->
-
-                <!--img.style.left = position[0] - img.width  / 2 + 'px';-->
-                <!--img.style.top  = position[1] - img.height / 2 + 'px';-->
-
-                <!--img.style.transform = 'rotate(' + -rotation + 'rad)';-->
-
-                <!--img.style.webkitTransform = img.style.MozTransform = img.style.msTransform =-->
-                        <!--img.style.OTransform = img.style.transform;-->
-
-            <!--};-->
-
-        <!--};-->
-
-        <!--cats[0] = new Cat();-->
-
-    <!--</script>-->
-
-    <br>
-    <br>
-    <script>
-        Leap.loop({})
-                .use('playback', {
-                    recording: '/json/alex.json.lz',
-                    requiredProtocolVersion: 6,
-                    pauseOnHand: true,
-                    loop: true
-                })
-                .use('riggedHand');
-        window.controller = Leap.loopController;
-    </script>
+            <!--}).use('riggedHand');-->
+            <!--window.controller = Leap.loopController;-->
+            <!--}-->
+            <!--});-->
+        </script>
+    </div>
 </div>

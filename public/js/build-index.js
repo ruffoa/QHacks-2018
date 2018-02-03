@@ -2709,7 +2709,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 3);
+/******/ 	return __webpack_require__(__webpack_require__.s = 4);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -2729,7 +2729,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _numjs = __webpack_require__(4);
+var _numjs = __webpack_require__(2);
 
 var _numjs2 = _interopRequireDefault(_numjs);
 
@@ -2740,13 +2740,13 @@ var _lodash2 = _interopRequireDefault(_lodash);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var getShape = function getShape(signalA, signalB) {
-  return [signalA.shape[0], signalB.shape[0]];
+  return [_numjs2.default.asarray(signalA).shape[0], _numjs2.default.asarray(signalB).shape[0]];
 };
 var getIndices = function getIndices(signal) {
-  return _lodash2.default.range(signal.shape[0]);
+  return _lodash2.default.range(_numjs2.default.array(signal).shape[0]);
 };
 var getParameters = function getParameters(signal) {
-  return _lodash2.default.range(signal.shape[1]);
+  return _lodash2.default.range(_numjs2.default.array(signal).shape[1]);
 };
 var absMinus = function absMinus(a, b) {
   return Math.abs(a - b);
@@ -2764,7 +2764,7 @@ var absMinus = function absMinus(a, b) {
  */
 var sumSignalsAtCoords = function sumSignalsAtCoords(signalA, signalB, aIndex, bIndex) {
   return _lodash2.default.sum(_lodash2.default.map(getParameters(signalA), function (param) {
-    return absMinus(signalA.get(aIndex, param), signalB.get(bIndex, param));
+    return absMinus(_numjs2.default.array(signalA).get(aIndex, param), _numjs2.default.array(signalB).get(bIndex, param));
   }));
 };
 
@@ -2812,6 +2812,12 @@ exports.default = getDistanceMatrix;
 
 /***/ }),
 /* 2 */
+/***/ (function(module, exports) {
+
+module.exports = require("numjs");
+
+/***/ }),
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2840,7 +2846,7 @@ var countTopClassElements = function countTopClassElements(sortedWhoWins, gestur
 exports.default = countTopClassElements;
 
 /***/ }),
-/* 3 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2849,7 +2855,7 @@ exports.default = countTopClassElements;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.countTopElements = exports.buildWhoWins = exports.confidence = exports.getDistanceMatrix = undefined;
+exports.countTopElements = exports.buildWhoWinsSorted = exports.confidence = exports.getDistanceMatrix = undefined;
 
 var _getDistanceMatrix = __webpack_require__(1);
 
@@ -2863,7 +2869,7 @@ var _buildWhoWinsSorted = __webpack_require__(6);
 
 var _buildWhoWinsSorted2 = _interopRequireDefault(_buildWhoWinsSorted);
 
-var _countTopClassElements = __webpack_require__(2);
+var _countTopClassElements = __webpack_require__(3);
 
 var _countTopClassElements2 = _interopRequireDefault(_countTopClassElements);
 
@@ -2871,14 +2877,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 exports.getDistanceMatrix = _getDistanceMatrix2.default;
 exports.confidence = _confidence2.default;
-exports.buildWhoWins = _buildWhoWinsSorted2.default;
+exports.buildWhoWinsSorted = _buildWhoWinsSorted2.default;
 exports.countTopElements = _countTopClassElements2.default;
-
-/***/ }),
-/* 4 */
-/***/ (function(module, exports) {
-
-module.exports = require("numjs");
 
 /***/ }),
 /* 5 */
@@ -2891,7 +2891,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _countTopClassElements = __webpack_require__(2);
+var _countTopClassElements = __webpack_require__(3);
 
 var _countTopClassElements2 = _interopRequireDefault(_countTopClassElements);
 
@@ -2924,6 +2924,10 @@ var _getDistanceMatrix = __webpack_require__(1);
 
 var _getDistanceMatrix2 = _interopRequireDefault(_getDistanceMatrix);
 
+var _numjs = __webpack_require__(2);
+
+var _numjs2 = _interopRequireDefault(_numjs);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var getDistance = function getDistance(distanceMatrix) {
@@ -2936,20 +2940,20 @@ var buildSingleStep = function buildSingleStep(gestureExample, gestureToClassify
 
 var buildWhoWins = function buildWhoWins(gestures, gestureToClassify) {
   return _lodash2.default.map(gestures, function (gestureExample) {
-    return buildSingleStep(gestureExample, gestureToClassify, gestureExample.name);
+    return buildSingleStep(gestureExample.trainingExamples, gestureToClassify, gestureExample.name);
   });
 };
 
 var reformatGesture = function reformatGesture(gesture) {
-  return nj.array(gesture.trainingExamples);
+  return _numjs2.default.array(gesture.trainingExamples);
 };
 
 var reformatGestures = function reformatGestures(gestures) {
-  return nj.array(_lodash2.default.map(gestures, reformatGesture));
+  return _numjs2.default.array(_lodash2.default.map(gestures, reformatGesture));
 };
 
 var buildWhoWinsSorted = function buildWhoWinsSorted(gestures, gestureToClassify) {
-  return nj.asarray(buildWhoWins(gestures, gestureToClassify).sort(function (a, b) {
+  return _numjs2.default.array(buildWhoWins(gestures, gestureToClassify).sort(function (a, b) {
     return a[0] - b[0];
   }));
 };
@@ -37546,7 +37550,7 @@ module.exports = function rgb2gray (img) {
 var NdArray = require('../ndarray');
 var rgb2gray = require('./rgb2gray');
 
-var doIntegrate = require('cwise/lib/wrapper')({"args":["array","array","index",{"offset":[-1,-1],"array":0},{"offset":[-1,0],"array":0},{"offset":[0,-1],"array":0}],"pre":{"body":"{}","args":[],"thisVars":[],"localVars":[]},"body":{"body":"{_inline_28_arg0_=0!==_inline_28_arg2_[0]&&0!==_inline_28_arg2_[1]?_inline_28_arg1_+_inline_28_arg4_+_inline_28_arg5_-_inline_28_arg3_:0===_inline_28_arg2_[0]&&0===_inline_28_arg2_[1]?_inline_28_arg1_:0===_inline_28_arg2_[0]?_inline_28_arg1_+_inline_28_arg5_:_inline_28_arg1_+_inline_28_arg4_}","args":[{"name":"_inline_28_arg0_","lvalue":true,"rvalue":false,"count":1},{"name":"_inline_28_arg1_","lvalue":false,"rvalue":true,"count":4},{"name":"_inline_28_arg2_","lvalue":false,"rvalue":true,"count":5},{"name":"_inline_28_arg3_","lvalue":false,"rvalue":true,"count":1},{"name":"_inline_28_arg4_","lvalue":false,"rvalue":true,"count":2},{"name":"_inline_28_arg5_","lvalue":false,"rvalue":true,"count":2}],"thisVars":[],"localVars":[]},"post":{"body":"{}","args":[],"thisVars":[],"localVars":[]},"debug":false,"funcName":"doIntegrateBody","blockSize":64});
+var doIntegrate = require('cwise/lib/wrapper')({"args":["array","array","index",{"offset":[-1,-1],"array":0},{"offset":[-1,0],"array":0},{"offset":[0,-1],"array":0}],"pre":{"body":"{}","args":[],"thisVars":[],"localVars":[]},"body":{"body":"{_inline_25_arg0_=0!==_inline_25_arg2_[0]&&0!==_inline_25_arg2_[1]?_inline_25_arg1_+_inline_25_arg4_+_inline_25_arg5_-_inline_25_arg3_:0===_inline_25_arg2_[0]&&0===_inline_25_arg2_[1]?_inline_25_arg1_:0===_inline_25_arg2_[0]?_inline_25_arg1_+_inline_25_arg5_:_inline_25_arg1_+_inline_25_arg4_}","args":[{"name":"_inline_25_arg0_","lvalue":true,"rvalue":false,"count":1},{"name":"_inline_25_arg1_","lvalue":false,"rvalue":true,"count":4},{"name":"_inline_25_arg2_","lvalue":false,"rvalue":true,"count":5},{"name":"_inline_25_arg3_","lvalue":false,"rvalue":true,"count":1},{"name":"_inline_25_arg4_","lvalue":false,"rvalue":true,"count":2},{"name":"_inline_25_arg5_","lvalue":false,"rvalue":true,"count":2}],"thisVars":[],"localVars":[]},"post":{"body":"{}","args":[],"thisVars":[],"localVars":[]},"debug":false,"funcName":"doIntegrateBody","blockSize":64});
 
 /**
  * Compute Sum Area Table, also known as the integral of the image
@@ -37646,7 +37650,7 @@ var NdArray = require('../ndarray');
 var __ = require('../utils');
 var rgb2gray = require('./rgb2gray');
 
-var doSobel = require('cwise/lib/wrapper')({"args":["array","array",{"offset":[-1,-1],"array":1},{"offset":[-1,0],"array":1},{"offset":[-1,1],"array":1},{"offset":[0,-1],"array":1},{"offset":[0,1],"array":1},{"offset":[1,-1],"array":1},{"offset":[1,0],"array":1},{"offset":[1,1],"array":1}],"pre":{"body":"{}","args":[],"thisVars":[],"localVars":[]},"body":{"body":"{var _inline_25_q=_inline_25_arg2_+2*_inline_25_arg3_+_inline_25_arg4_-_inline_25_arg7_-2*_inline_25_arg8_-_inline_25_arg9_,_inline_25_s=_inline_25_arg2_-_inline_25_arg4_+2*_inline_25_arg5_-2*_inline_25_arg6_+_inline_25_arg7_-_inline_25_arg9_;_inline_25_arg0_=Math.sqrt(_inline_25_s*_inline_25_s+_inline_25_q*_inline_25_q)}","args":[{"name":"_inline_25_arg0_","lvalue":true,"rvalue":false,"count":1},{"name":"_inline_25_arg1_","lvalue":false,"rvalue":false,"count":0},{"name":"_inline_25_arg2_","lvalue":false,"rvalue":true,"count":2},{"name":"_inline_25_arg3_","lvalue":false,"rvalue":true,"count":1},{"name":"_inline_25_arg4_","lvalue":false,"rvalue":true,"count":2},{"name":"_inline_25_arg5_","lvalue":false,"rvalue":true,"count":1},{"name":"_inline_25_arg6_","lvalue":false,"rvalue":true,"count":1},{"name":"_inline_25_arg7_","lvalue":false,"rvalue":true,"count":2},{"name":"_inline_25_arg8_","lvalue":false,"rvalue":true,"count":1},{"name":"_inline_25_arg9_","lvalue":false,"rvalue":true,"count":2}],"thisVars":[],"localVars":["_inline_25_q","_inline_25_s"]},"post":{"body":"{}","args":[],"thisVars":[],"localVars":[]},"debug":false,"funcName":"doSobelBody","blockSize":64});
+var doSobel = require('cwise/lib/wrapper')({"args":["array","array",{"offset":[-1,-1],"array":1},{"offset":[-1,0],"array":1},{"offset":[-1,1],"array":1},{"offset":[0,-1],"array":1},{"offset":[0,1],"array":1},{"offset":[1,-1],"array":1},{"offset":[1,0],"array":1},{"offset":[1,1],"array":1}],"pre":{"body":"{}","args":[],"thisVars":[],"localVars":[]},"body":{"body":"{var _inline_28_q=_inline_28_arg2_+2*_inline_28_arg3_+_inline_28_arg4_-_inline_28_arg7_-2*_inline_28_arg8_-_inline_28_arg9_,_inline_28_s=_inline_28_arg2_-_inline_28_arg4_+2*_inline_28_arg5_-2*_inline_28_arg6_+_inline_28_arg7_-_inline_28_arg9_;_inline_28_arg0_=Math.sqrt(_inline_28_s*_inline_28_s+_inline_28_q*_inline_28_q)}","args":[{"name":"_inline_28_arg0_","lvalue":true,"rvalue":false,"count":1},{"name":"_inline_28_arg1_","lvalue":false,"rvalue":false,"count":0},{"name":"_inline_28_arg2_","lvalue":false,"rvalue":true,"count":2},{"name":"_inline_28_arg3_","lvalue":false,"rvalue":true,"count":1},{"name":"_inline_28_arg4_","lvalue":false,"rvalue":true,"count":2},{"name":"_inline_28_arg5_","lvalue":false,"rvalue":true,"count":1},{"name":"_inline_28_arg6_","lvalue":false,"rvalue":true,"count":1},{"name":"_inline_28_arg7_","lvalue":false,"rvalue":true,"count":2},{"name":"_inline_28_arg8_","lvalue":false,"rvalue":true,"count":1},{"name":"_inline_28_arg9_","lvalue":false,"rvalue":true,"count":2}],"thisVars":[],"localVars":["_inline_28_q","_inline_28_s"]},"post":{"body":"{}","args":[],"thisVars":[],"localVars":[]},"debug":false,"funcName":"doSobelBody","blockSize":64});
 
 /**
  * Find the edge magnitude using the Sobel transform.
@@ -79780,6 +79784,7 @@ const URLS = require("./constants/urls.json");
 const API_BASE_URL = URLS.API_BASE_URL;
 const TOKEN_AUTH_URL = URLS.TOKEN_AUTH_URL;
 const leapPlugins = require("leapjs-plugins");
+const nj = require("numjs");
 
 const dtw = require("@xesto/dtw");
 
@@ -79795,8 +79800,6 @@ const hackerModeGetAuthToken = ( apikey ) => {
     })
 }
 
-
-
 const getGestures = ( apikey ) => {
   return new Promise(( resolve, reject ) => {
     hackerModeGetAuthToken( apikey ).then( token => {
@@ -79810,8 +79813,8 @@ const getGestures = ( apikey ) => {
 
 
 const classify = ( frames, gestures ) => {
-  const whoWins = dtw.buildWhoWins( frames, gestures );
-  const winner = whoWins[0,1]
+  const whoWins = dtw.buildWhoWinsSorted( frames, gestures );
+  const winner = whoWins.get(0, 1);
 
   const confidence = dtw.confidence( whoWins, winner,  5 );
   const name = winner.name;
@@ -79828,10 +79831,27 @@ const prepareFrame = ( frame ) => {
   return [ ...handData, ...fingers ]
 }
 
-const palmSensitivityLimit = 2;
-const fingerSensitivityLimit = 2;
+const palmSensitivityLimit = 1
+const fingerSensitivityLimit = 1
 
-const getAveragePositionDifference = ( positions) => {
+const getAveragePalmPositionDifference = ( positions ) => {
+
+  let distance;
+  let sumOfDistances = 0;
+  for (let i = 1; i < positions.length; i++) {
+    let firstPosition = positions[i-1];
+    let secondPosition = positions[i];
+    let xPositionDifference = firstPosition[0] - secondPosition[0]
+    let yPositionDifference = firstPosition[1] - secondPosition[1]
+    let zPositionDifference = firstPosition[2]- secondPosition[2]
+    distance = Math.sqrt(Math.pow(xPositionDifference,2) +
+                        Math.pow(yPositionDifference,2) +
+                        Math.pow(zPositionDifference,2) );
+    sumOfDistances = sumOfDistances + distance;
+  }
+  return sumOfDistances/(positions.length - 1);
+}
+const getAverageFingerPositionDifference = ( positions) => {
   let distance;
   let sumOfDistances = 0;
   for (let i = 1; i < positions.length; i++) {
@@ -79849,16 +79869,17 @@ const getAveragePositionDifference = ( positions) => {
 }
 
 function getPalmPositions(latestFramesOfExample) {
-  return latestFramesOfExample.map(frame => frame.hands[0].palm.position);
+  return latestFramesOfExample.map(frame => frame.hands[0].palmPosition);
 }
 
 function isPalmMoving(palmPositions) {
-  return getAveragePositionDifference(palmPositions) > palmSensitivityLimit;
+    console.log("Palm is Moving!");
+  return getAveragePalmPositionDifference(palmPositions) > palmSensitivityLimit;
 }
 
 function groupFingers(latestExampleFrames) {
   const fingersData = latestExampleFrames.map(
-    frame => frame.firstHand.fingers
+    frame => frame.hands[0].fingers
   );
   const fingersCount = fingersData[0] ? fingersData[0].length : 0
 
@@ -79866,27 +79887,28 @@ function groupFingers(latestExampleFrames) {
   for (let fingerNumber = 0; fingerNumber < fingersCount; fingerNumber++) {
     let dataCollectionOfFinger = []
     fingersData.forEach(fingers => {
-      dataCollectionOfFinger = dataCollectionOfFinger.concat(fingers[fingerNumber].position)
+      dataCollectionOfFinger = dataCollectionOfFinger.concat(fingers[fingerNumber].positions)
     })
     eachFingerGrouped = eachFingerGrouped.concat([dataCollectionOfFinger]);
   }
   return eachFingerGrouped
 }
 
-const areFingersMoving = ( latestFewExamples ) => {
-  const group = groupFingers( latestFewExamples );
-  const difference = getAveragePositionDifference( group );
-  return difference < fingerSensitivityLimit;
+const areFingersMoving = ( groupedFingers ) => {
+  return groupedFingers.some( finger => getAverageFingerPositionDifference( finger ) > fingerSensitivityLimit );
 }
 
 const isHandMoving = ( lastFewFrames ) => {
   if ( lastFewFrames.length === 0 ) {
     return false;
   }
+
+  if( lastFewFrames.some( frame => frame.hands[0] === undefined )) {
+    return false;
+  }
+
   const palmPositions = getPalmPositions( lastFewFrames );
-
   const groupedFingers = groupFingers( lastFewFrames );
-
   return isPalmMoving( palmPositions ) || areFingersMoving( groupedFingers );
 }
 
@@ -79894,31 +79916,33 @@ const buildController = ( classifier ) => {
   const controller = new Leap.Controller();
   let frames = [];
   let isRecording = false;
+  let motionDetectionFrames = []
 
   Leap.plugin("xesto-wave", function ( options ) {
     const _super = this;
 
     return {
       frame: ( frame ) => {
-        console.log( frame );
-        if ( frame.hands.length === 0 ) {
-          return;
+        if( motionDetectionFrames.length > 15 ) {
+          motionDetectionFrames = motionDetectionFrames.slice(1, 15);
         }
-        if ( isHandMoving( frames.reverse().slice(0,5) )) {
+
+        motionDetectionFrames.push( frame );
+        const moving = isHandMoving( motionDetectionFrames );
+
+
+        if ( moving ) {
           frames.push( prepareFrame( frame ));
         }
 
-        if ( !isHandMoving( frames.reverse().slice(0,5) ) && frames.length > 0 ){
+        if ( !moving && frames.length > 0 ){
             const classification = classifier( frames )
             const gestureName = classifcation.name;
             const confidence = classification.confidence;
             
             console.log( gestureName, confidence );
 
-            if ( confidence < 0.75 ) {
-              _super.emit( gestureName, frames );
-              frames = [];
-            } 
+            _super.emit( gestureName, confidence );
           }
         }
       }
@@ -79937,13 +79961,10 @@ const xesto = ( apikey ) => {
   return { 
    connect: () => {
       return getGestures( apikey ).then( response => {
-        console.log( response );
         return response.gestures
       }).then( gestures => {
-        console.log( gestures )
-        return ( gesture ) => classify( gesture, gestures )
+        return ( gesture ) => classify( gestures, gesture )
       }).then( classifier => {
-        console.log( classifier );
         return buildController( classifier )
       }); 
     }
@@ -79952,7 +79973,7 @@ const xesto = ( apikey ) => {
 
 module.exports = xesto;
 
-},{"./constants/urls.json":125,"@xesto/dtw":8,"leapjs":62,"leapjs-plugins":44,"radians-degrees":103,"socket.io-client":104,"superagent":114}],125:[function(require,module,exports){
+},{"./constants/urls.json":125,"@xesto/dtw":8,"leapjs":62,"leapjs-plugins":44,"numjs":98,"radians-degrees":103,"socket.io-client":104,"superagent":114}],125:[function(require,module,exports){
 module.exports={
   "API_BASE_URL": "http://xesto-apiportal-backend.herokuapp.com/",
   "TOKEN_AUTH_URL": "https://xesto-apiportal-backend.herokuapp.com/auth/hacker"
@@ -80045,7 +80066,10 @@ const client = waveClient("d0fb8b3b7aab48f8a819dd49b3750694");
         controller.on("swipe_right", () => {
             console.log("Woo! Swipe right!");
         });
-        
-})
+        controller.connect();
+        console.log("Controller Connected");
+
+    });
+
 
 },{"xesto-wave":124}]},{},[127]);
