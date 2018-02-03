@@ -43,4 +43,10 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
+//Run server
+app.listen(80, function () {
+    console.log('Example app listening on port 8000!');
+});
+
 module.exports = app;
+
