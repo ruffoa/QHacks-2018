@@ -16,84 +16,50 @@
         Featured
     </div>
     <div class="card-body">
-        <h5 class="card-title">Special title treatment</h5>
-        <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-        <a href="#" class="btn btn-primary">Go somewhere</a>
+        <h5 class="card-title">Text to ASL Translator</h5>
+        <p class="card-text">Currently showing: <span id="currentWord"></span></p>
+
+
+    <br>
+        <div style="padding: 10px 10px 10px 10px;">
+            <label for="exampleInputEmail1">Type a word</label>
+            <div class="row">
+                <input type="text" class="form-control col-md-9" id="keywords" aria-describedby="keywordHelp"
+                       placeholder="Enter Words To Display Here">
+                <!--<small id="keywordHelp" class="form-text text-muted">Enter Words To Display Here, and they will be-->
+                <!--turned into sign language-->
+                <!--</small>-->
+                <div class="col-md-1"></div>
+                <button onclick="submitClick()" class="btn btn-primary col-md-2">Submit</button>
+            </div>
+
+        </div>
+
     </div>
 
-    <div class="row">
-        <label for="exampleInputEmail1">Type a word</label>
-        <input type="text" class="form-control" id="keywords" aria-describedby="keywordHelp"
-               placeholder="Enter Words To Display Here">
-        <small id="keywordHelp" class="form-text text-muted">Enter Words To Display Here, and they will be
-            turned into sign language
-        </small>
-        <button onclick="submitClick()" class="btn btn-primary">Submit</button>
 
-        <div id="connect-leap" class="col-md-8"></div>
-        <script>
+    <div id="connect-leap" class="col-md-8"></div>
+    <script>
 
-            var recordingName = "alex";
-            var strArr = [];
+        var recordingName = "alex";
+        var strArr = [];
 
-            function submitClick() {
-                var str = document.getElementById('keywords').value;
-                var res = str.split(" ");
-                strArr = res;
-                for (var i = 0; i < res.length; i++) {
-                    recordingName = res[i];
-                    var pos = i;
+        function submitClick() {
+            var str = document.getElementById('keywords').value;
+            var res = str.split(" ");
+            strArr = res;
+            for (var i = 0; i < res.length; i++) {
+                recordingName = res[i].replace(/\W/g, '');
+                var pos = i;
 
-                    if (UrlExists('/json/' + recordingName + '.json.lz')) {
-
-                        if (document.getElementsByTagName("canvas").length > 0)
-                            for (var i = 0; i < document.getElementsByTagName("canvas").length; i++)
-                                document.getElementsByTagName("canvas")[i].remove();
-
-                        var controller = new Leap.Controller();
-                        controller
-                                .use('playback', {
-                                    recording: '/json/' + recordingName + '.json.lz',
-                                    requiredProtocolVersion: 6,
-                                    pauseOnHand: true,
-                                    loop: false,
-                                    overlay: false,
-                                }).use('riggedHand').connect();
-                        window.controller = controller;
-
-                        return window.controller.on('playback.playbackFinished', function (player) {
-                            console.log("Playback DOne!");
-                            pos++;
-                            document.getElementsByTagName("canvas")[0].remove();
-                            playVideo(pos, res.length);
-                        });
-                    }
-                    else {
-                        pos++;
-                        if (document.getElementsByTagName("canvas").length > 0)
-                            for (var i = 0; i < document.getElementsByTagName("canvas").length; i++)
-                                document.getElementsByTagName("canvas")[i].remove();
-
-                        playVideo(pos, res.length);
-                    }
-
-
-                }
-            }
-
-            function playVideo(pos, max) {
-                console.log("Play video called!");
-
-                if (pos >= max)
-                    return;
-
-                recordingName = strArr[pos];
 
                 if (UrlExists('/json/' + recordingName + '.json.lz')) {
 
                     if (document.getElementsByTagName("canvas").length > 0)
                         for (var i = 0; i < document.getElementsByTagName("canvas").length; i++)
                             document.getElementsByTagName("canvas")[i].remove();
+
+                    document.getElementById('currentWord').innerText = res[i];
 
                     var controller = new Leap.Controller();
                     controller
@@ -104,33 +70,84 @@
                                 loop: false,
                                 overlay: false,
                             }).use('riggedHand').connect();
-
-
                     window.controller = controller;
 
                     return window.controller.on('playback.playbackFinished', function (player) {
                         console.log("Playback DOne!");
                         pos++;
                         document.getElementsByTagName("canvas")[0].remove();
-                        playVideo(pos, max);
+                        playVideo(pos, res.length);
                     });
-
-                } else {
+                }
+                else {
                     pos++;
                     if (document.getElementsByTagName("canvas").length > 0)
                         for (var i = 0; i < document.getElementsByTagName("canvas").length; i++)
                             document.getElementsByTagName("canvas")[i].remove();
-                    playVideo(pos, max);
+
+                    document.getElementById('currentWord').innerText = "";
+
+                    playVideo(pos, res.length);
                 }
-            }
 
-            function UrlExists(url) {
-                var http = new XMLHttpRequest();
-                http.open('HEAD', url, false);
-                http.send();
-                return http.status != 404;
-            }
 
-        </script>
-    </div>
+            }
+        }
+
+        function playVideo(pos, max) {
+            console.log("Play video called!");
+
+            if (pos >= max)
+                return;
+
+            recordingName = strArr[pos].replace(/\W/g, '');
+
+            if (UrlExists('/json/' + recordingName + '.json.lz')) {
+
+                document.getElementById('currentWord').innerText = strArr[pos];
+
+                if (document.getElementsByTagName("canvas").length > 0)
+                    for (var i = 0; i < document.getElementsByTagName("canvas").length; i++)
+                        document.getElementsByTagName("canvas")[i].remove();
+
+                var controller = new Leap.Controller();
+                controller
+                        .use('playback', {
+                            recording: '/json/' + recordingName + '.json.lz',
+                            requiredProtocolVersion: 6,
+                            pauseOnHand: true,
+                            loop: false,
+                            overlay: false,
+                        }).use('riggedHand').connect();
+
+
+                window.controller = controller;
+
+                return window.controller.on('playback.playbackFinished', function (player) {
+                    console.log("Playback DOne!");
+                    pos++;
+                    document.getElementsByTagName("canvas")[0].remove();
+                    playVideo(pos, max);
+                });
+
+            } else {
+                pos++;
+                if (document.getElementsByTagName("canvas").length > 0)
+                    for (var i = 0; i < document.getElementsByTagName("canvas").length; i++)
+                        document.getElementsByTagName("canvas")[i].remove();
+
+                document.getElementById('currentWord').innerText = "";
+                playVideo(pos, max);
+            }
+        }
+
+        function UrlExists(url) {
+            var http = new XMLHttpRequest();
+            http.open('HEAD', url, false);
+            http.send();
+            return http.status != 404;
+        }
+
+    </script>
+</div>
 </div>
