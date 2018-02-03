@@ -1,12 +1,14 @@
 <head>
-    <script src="/js/build-index.js"></script>
-    <!--<script src="recorder/javascripts/lib/three.min.js"></script>-->
+    <!--<script src="/js/build-index.js"></script>-->
+    <script src="js/three.min.js"></script>
 
-    <!--<script src="http://js.leapmotion.com/leap-0.6.4.js"></script>-->
-    <!--<script src="http://js.leapmotion.com/leap-plugins-0.1.11.js"></script>-->
-    <!--<script src="http://js.leapmotion.com/leap.rigged-hand-0.1.4.js"></script>-->
+    <script src="http://js.leapmotion.com/leap-0.6.4.js"></script>
+    <script src="http://js.leapmotion.com/leap-plugins-0.1.11.js"></script>
+    <script src="http://js.leapmotion.com/leap.rigged-hand-0.1.4.js"></script>
     <!--&lt;!&ndash; override the bundled playback plugin: &ndash;&gt;-->
-    <!--<script src="js/leap.playback-0.2.1.min.js"></script></head>-->
+    <!--<script src="js/leap.playback-0.2.1.min.js"></script>-->
+</head>
+
 <h1>{{title}}</h1>
 <p>Welcome to {{title}}</p>
 <div class="card">
@@ -19,6 +21,7 @@
         <a href="#" class="btn btn-primary">Go somewhere</a>
     </div>
 
+    <input>
     <!--<script>-->
         <!--var cats = {};-->
 
@@ -64,15 +67,15 @@
 
     <br>
     <br>
-    <!--<script>-->
-        <!--Leap.loop({})-->
-                <!--.use('playback', {-->
-                    <!--recording: '/json/alex.json.lz',-->
-                    <!--requiredProtocolVersion: 6,-->
-                    <!--pauseOnHand: true,-->
-                    <!--loop: true-->
-                <!--})-->
-                <!--.use('riggedHand');-->
-        <!--window.controller = Leap.loopController;-->
-    <!--</script>-->
+    <script>
+        Leap.loop({})
+                .use('playback', {
+                    recording: '/json/alex.json.lz',
+                    requiredProtocolVersion: 6,
+                    pauseOnHand: true,
+                    loop: true
+                })
+                .use('riggedHand');
+        window.controller = Leap.loopController;
+    </script>
 </div>
