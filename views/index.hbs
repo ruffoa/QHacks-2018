@@ -35,8 +35,6 @@
 
             var recordingName = "alex";
             var strArr = [];
-            var timeVid = 0;
-            var isDone = false;
 
             function submitClick() {
                 var str = document.getElementById('keywords').value;
@@ -44,27 +42,40 @@
                 strArr = res;
                 for (var i = 0; i < res.length; i++) {
                     recordingName = res[i];
-                    isDone = false;
-                    pos = i;
+                    var pos = i;
 
-                    var controller = new Leap.Controller();
-                    if ()
-                    controller
-                            .use('playback', {
-                                recording: '/json/' + recordingName + '.json.lz',
-                                requiredProtocolVersion: 6,
-                                pauseOnHand: true,
-                                loop: false,
-                                overlay: false,
-                            }).use('riggedHand').connect();
-                    window.controller = controller;
+                    if (UrlExists('/json/' + recordingName + '.json.lz')) {
 
-                    return window.controller.on('playback.playbackFinished', function (player) {
-                        console.log("Playback DOne!");
+                        if (document.getElementsByTagName("canvas").length > 0)
+                            for (var i = 0; i < document.getElementsByTagName("canvas").length; i++)
+                                document.getElementsByTagName("canvas")[i].remove();
+
+                        var controller = new Leap.Controller();
+                        controller
+                                .use('playback', {
+                                    recording: '/json/' + recordingName + '.json.lz',
+                                    requiredProtocolVersion: 6,
+                                    pauseOnHand: true,
+                                    loop: false,
+                                    overlay: false,
+                                }).use('riggedHand').connect();
+                        window.controller = controller;
+
+                        return window.controller.on('playback.playbackFinished', function (player) {
+                            console.log("Playback DOne!");
+                            pos++;
+                            document.getElementsByTagName("canvas")[0].remove();
+                            playVideo(pos, res.length);
+                        });
+                    }
+                    else {
                         pos++;
-                        document.getElementsByTagName("canvas")[0].remove();
+                        if (document.getElementsByTagName("canvas").length > 0)
+                            for (var i = 0; i < document.getElementsByTagName("canvas").length; i++)
+                                document.getElementsByTagName("canvas")[i].remove();
+
                         playVideo(pos, res.length);
-                    });
+                    }
 
 
                 }
@@ -78,34 +89,46 @@
 
                 recordingName = strArr[pos];
 
-                var controller = new Leap.Controller();
-                controller
-                        .use('playback', {
-                            recording: '/json/' + recordingName + '.json.lz',
-                            requiredProtocolVersion: 6,
-                            pauseOnHand: true,
-                            loop: false,
-                            overlay: false,
-                        }).use('riggedHand').connect();
+                if (UrlExists('/json/' + recordingName + '.json.lz')) {
+
+                    if (document.getElementsByTagName("canvas").length > 0)
+                        for (var i = 0; i < document.getElementsByTagName("canvas").length; i++)
+                            document.getElementsByTagName("canvas")[i].remove();
+
+                    var controller = new Leap.Controller();
+                    controller
+                            .use('playback', {
+                                recording: '/json/' + recordingName + '.json.lz',
+                                requiredProtocolVersion: 6,
+                                pauseOnHand: true,
+                                loop: false,
+                                overlay: false,
+                            }).use('riggedHand').connect();
 
 
-                window.controller = controller;
+                    window.controller = controller;
 
-                return window.controller.on('playback.playbackFinished', function (player) {
-                    console.log("Playback DOne!");
+                    return window.controller.on('playback.playbackFinished', function (player) {
+                        console.log("Playback DOne!");
+                        pos++;
+                        document.getElementsByTagName("canvas")[0].remove();
+                        playVideo(pos, max);
+                    });
+
+                } else {
                     pos++;
-                    document.getElementsByTagName("canvas")[0].remove();
+                    if (document.getElementsByTagName("canvas").length > 0)
+                        for (var i = 0; i < document.getElementsByTagName("canvas").length; i++)
+                            document.getElementsByTagName("canvas")[i].remove();
                     playVideo(pos, max);
-                });
-
+                }
             }
 
-            function UrlExists(url)
-            {
+            function UrlExists(url) {
                 var http = new XMLHttpRequest();
                 http.open('HEAD', url, false);
                 http.send();
-                return http.status!=404;
+                return http.status != 404;
             }
 
         </script>
