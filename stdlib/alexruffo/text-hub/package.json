@@ -1,0 +1,24 @@
+{
+  "name": "text-hub",
+  "version": "0.0.0",
+  "description": "",
+  "author": "alexruffo <ruffo.alex@queensu.ca>",
+  "main": "functions/__main__.js",
+  "dependencies": {
+    "lib": "^3.0.1",
+    "request": "^2.81.0",
+    "twilio": "^3.3.0"
+  },
+  "private": true,
+  "stdlib": {
+    "build": "faaslang",
+    "name": "alexruffo/text-hub",
+    "timeout": 10000,
+    "publish": true,
+    "personalize": {
+      "keys": [],
+      "user": []
+    },
+    "source": "twilio"
+  }
+}
