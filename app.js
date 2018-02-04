@@ -30,6 +30,9 @@ app.use('/', index);
 app.get('/gesture', function (req, res, next) {
     res.render('gesturePage', {title: 'ASL to Text Translator'});
 });
+app.get('/trump', function (req, res, next) {
+    res.render('trump', {title: 'ASL to Text Translator'});
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

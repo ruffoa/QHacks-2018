@@ -1,0 +1,63 @@
+<head>
+    <!--<script src="https://js.leapmotion.com/0.2.0/leap.min.js"></script>-->
+    <script src="/js/leaptrainer.min.js"></script>
+
+    <script src="js/three.min.js"></script>
+
+    <script src="https://js.leapmotion.com/leap-0.6.4.js"></script>
+    <script src="https://js.leapmotion.com/leap-plugins-0.1.11.js"></script>
+    <script src="https://js.leapmotion.com/leap.rigged-hand-0.1.4.js"></script>
+
+    <link rel="stylesheet" type="text/css"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.1/css/font-awesome.min.css"/>
+    <!--&lt;!&ndash; override the bundled playback plugin: &ndash;&gt;-->
+    <!--<script src="js/leap.playback-0.2.1.min.js"></script>-->
+</head>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light"
+     style="background-color: #5cb85c!important; padding: -50px -50px -50px; z-index: 50000!important;">
+    <a class="navbar-brand" href="#">ASLeap Translator</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
+            aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+            <a class="nav-item nav-link" href="/">Speech to ASL<span class="sr-only">(current)</span></a>
+            <a class="nav-item nav-link active" href="#">ASL to Text</a>
+        </div>
+    </div>
+</nav>
+
+<div style="padding: 30px 50px 10px 50px;">
+    <!--<h1>ASL to Text Translator</h1>-->
+    <div id="message_container"></div>
+
+    <div class="card">
+        <div class="card-header card-title">ASL to Text Translator</div>
+        <div class="card-body">
+            <!--<h5 class="card-title">ASL to Text Translator</h5>-->
+            <div style="padding: 10px 10px 10px 10px;">
+                <label for="exampleInputEmail1">Recognized Gesture Translations Will Appear Below</label>
+                <div class="row">
+                  <img src="/images/trump.jpg" width="80%" height="70%">
+                </div>
+
+            </div>
+                <script>
+                var controller = new Leap.Controller();
+                controller
+                        .use('playback', {
+                            recording: '/json/Idontcare.json.lz',
+                            requiredProtocolVersion: 6,
+                            pauseOnHand: true,
+                            loop: false,
+                            overlay: false,
+                        }).use('riggedHand').connect();
+
+                
+
+            </script>
+        </div>
+    </div>
+</div>
