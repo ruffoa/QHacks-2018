@@ -51,7 +51,7 @@ app.use(function(err, req, res, next) {
 
 var port = process.env.PORT || 80;
 
-server.listen(port, function() {
+app.listen(port, function() {
     console.log('Listening on ' + port);
 });
 
