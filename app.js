@@ -27,8 +27,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/user', users);
 // app.use('/page', pg);
 app.use('/', index);
-app.get('/page', function (req, res, next) {
-    res.render('gesturePage');
+app.get('/gesture', function (req, res, next) {
+    res.render('gesturePage', {title: 'ASL to Text Translator'});
 });
 
 // catch 404 and forward to error handler
