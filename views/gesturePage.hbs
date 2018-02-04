@@ -7,6 +7,7 @@
     <script src="https://js.leapmotion.com/leap-0.6.4.js"></script>
     <script src="https://js.leapmotion.com/leap-plugins-0.1.11.js"></script>
     <script src="https://js.leapmotion.com/leap.rigged-hand-0.1.4.js"></script>
+    <script src='https://code.responsivevoice.org/responsivevoice.js'></script>
 
     <link rel="stylesheet" type="text/css"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.1/css/font-awesome.min.css"/>
@@ -70,10 +71,13 @@
                 trainer.on('PEACE', function () {
                     console.log('peace gesture detected!');
                     document.getElementById('keywords').innerText += " Peace ";
+                    responsiveVoice.speak("Peace");
+
                 });
                 trainer.on('WAVE', function () {
                     console.log('wave gesture detected!');
                     document.getElementById('keywords').innerText += " Wave ";
+                    responsiveVoice.speak("Wave");
                 });
                 // trainer.on('FAMILY', function () {
                 //     console.log('family gesture detected!');
@@ -83,6 +87,7 @@
                 trainer.on('OK', function () {
                     console.log('ok gesture detected!');
                     document.getElementById('keywords').innerText += " OK ";
+                    responsiveVoice.speak("OK");
                 });
 
                 function showAlert(header, message, success) {
