@@ -58,6 +58,10 @@
             var pos = 0;
 
             for (var i = 0; i < res.length; i++) {
+
+                if (res[i].indexOf('f***') >= 0)
+                    recordingName = "fuck";
+
                 recordingName = res[i].replace(/\W/g, '');
                 if (UrlExists('/json/' + recordingName + '.json.lz')) {
                     hasValid = true;
@@ -92,6 +96,9 @@
 
             if (pos >= max)
                 return;
+
+            if (strArr[pos].indexOf('f***') >= 0)
+                recordingName = "fuck";
 
             recordingName = strArr[pos].replace(/\W/g, '');
 
@@ -200,5 +207,4 @@
             }
         }
     </script>
-</div>
 </div>
