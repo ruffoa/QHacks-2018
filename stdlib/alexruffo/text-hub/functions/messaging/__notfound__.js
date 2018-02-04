@@ -28,7 +28,10 @@ module.exports = (tel = '', body = '', media = null, from = {}, to = {}, callbac
 			return callback(null, `I told you to say cookies, not ${item}!`);
 		}
 
-	} else {
+	}
+	else if (body.length > 0){
+
+    }else {
 
 		// We didn't find a command or match anything
 		return callback(
